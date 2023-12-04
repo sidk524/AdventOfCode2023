@@ -173,7 +173,6 @@ def getSurroundingNumber(inp, row, col, startDig):
         return int(num) if num else -1
 
 def getAdjacent(inp, row, col):
-    adj = []
     nums = []
     for i in range(-1, 2):
         for j in range(-1, 2):
@@ -195,3 +194,4 @@ for n, row in enumerate(inp):
             ans += getAdjacent(inp, n, i)
 
 print(ans)
+
