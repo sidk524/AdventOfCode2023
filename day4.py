@@ -218,6 +218,4 @@ for n, i in enumerate(inp):
         continue
     else:
         ans += (2**(l-1)) * card[cardNum]
-       
-
 print(sum(card.values()))
