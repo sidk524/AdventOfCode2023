@@ -224,25 +224,77 @@ humidity-to-location map:
 2163582881 2797433602 892891148
 1469280759 1124064666 282509988
 0 280123413 3244927""".split("\n\n")  
+# inp = """seeds: 79 14 55 13
 
-seeds = [int(x) for x in inp[0].split()[1:]]
-seedRanges = []
-for n in range(1, len(seeds), 2):
-     seedRanges.append([seeds[n-1], seeds[n]])
+# seed-to-soil map:
+# 50 98 2
+# 52 50 48
 
+# soil-to-fertilizer map:
+# 0 15 37
+# 37 52 2
+# 39 0 15
 
+# fertilizer-to-water map:
+# 49 53 8
+# 0 11 42
+# 42 0 7
+# 57 7 4
 
-for q in seedRanges:
-        for k in inp[1:]:
-                x = k.split("\n")[1:]
-                
-                for line in x:
-                    nums = list(map(int, line.split()))
-                    range1 = [nums[0], nums[0]+nums[2]]
-                    range2 = [nums[1], nums[1]+nums[2]]
-                    if range1[0] <= curr <= range1[1]:
-                            diff = curr - range1[0]
-                            curr = range2[0] + diff
-                            break
- 
+# water-to-light map:
+# 88 18 7
+# 18 25 70
 
+# light-to-temperature map:
+# 45 77 23
+# 81 45 19
+# 68 64 13
+
+# temperature-to-humidity map:
+# 0 69 1
+# 1 0 69
+
+# humidity-to-location map:
+# 60 56 37
+# 56 93 4""".split("\n\n")
+seeds = list(map(int, inp[0].split()[1:]))
+seedRanges = [[seeds[n-1], seeds[n-1]+seeds[n]] for n in range(1, len(seeds), 2)]
+ans = []
+for s in seedRanges:
+    
+    mappedRanges = []
+    notMappedRanges = [s.copy()]
+    for x in inp[1:]:
+        for l in x.split("\n")[1:]:
+                line = list(map(int, l.split()))
+                rt, rs = [line[0], line[0] + line[2]], [line[1], line[1] + line[2]]
+                indices = []
+                toAdd = []
+                for n,r in enumerate(notMappedRanges):
+                        if r[1] < rs[0] or r[0] > rs[1]:
+                                continue
+                        else:
+                                diff = rt[0] - rs[0]
+                                overlap = [max(r[0], rs[0]), min(r[1], rs[1])]
+                                indices.append(n)
+                                mappedRanges.append([overlap[0]+diff, overlap[1]+diff])
+                                if r[0] < min(r[1], rs[0]):
+                                        toAdd.append([r[0], overlap[0]])
+                                if r[1] > max(rs[1], r[0]):
+                                        toAdd.append([overlap[1], r[1]])
+                                
+                for j in indices[::-1]:
+                        notMappedRanges.pop(j)
+                notMappedRanges.extend(toAdd)
+                toAdd = []
+                notMappedRanges.sort(key=lambda x: x[0])
+        notMappedRanges.extend(mappedRanges)
+        mappedRanges = []
+  
+    ans.extend(notMappedRanges)
+
+lowest = 99999999999999999999
+for a in ans:
+     if a[0] < lowest:
+        lowest = a[0]
+print(lowest)
