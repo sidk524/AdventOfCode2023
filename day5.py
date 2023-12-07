@@ -282,7 +282,6 @@ for s in seedRanges:
                                         toAdd.append([r[0], overlap[0]])
                                 if r[1] > max(rs[1], r[0]):
                                         toAdd.append([overlap[1], r[1]])
-                                
                 for j in indices[::-1]:
                         notMappedRanges.pop(j)
                 notMappedRanges.extend(toAdd)
