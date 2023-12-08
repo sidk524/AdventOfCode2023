@@ -1043,7 +1043,6 @@ for h in hands:
 def bubbleSort(hand1, hand2):
     for i, j  in list(zip(hand1, hand2)):
         if i != j:
-
             return rankings[i] < rankings[j]
         
 newRanks = []
@@ -1069,6 +1068,3 @@ for n,i in enumerate(newRanks[::-1]):
 print(ans)
     
         
-            
-
-
