@@ -139,6 +139,17 @@ inp = """.....................#..................#..............................
 ....................#...............#............#..........................................................................................
 .................................................................................#......#..............................................#....""".split("\n")
 
+# inp = """...#......
+# .......#..
+# #.........
+# ..........
+# ......#...
+# .#........
+# .........#
+# ..........
+# .......#..
+# #...#.....""".split("\n")
+
 g = [list(line) for line in inp]
 col, row = [], []
 for y in range(len(g)):
@@ -160,19 +171,19 @@ for x in range(len(g[0])):
     if found:
         col.append(x)
 
-offset = 0
-for r in row:
-    for _ in range(1000000):
-        g.insert(r + offset, ["." for _ in range(len(g[0]))])
-    offset += 1000000
+# offset = 0
+# for r in row:
+#     for _ in range(10):
+#         g.insert(r + offset, ["." for _ in range(len(g[0]))])
+#     offset += 10
 
 
-offset = 0
-for c in col:
-    for y in range(len(g)):
-        for _ in range(1000000):
-            g[y].insert(c+offset, ".")
-    offset += 1000000
+# offset = 0
+# for c in col:
+#     for y in range(len(g)):
+#         for _ in range(10):
+#             g[y].insert(c+offset, ".")
+#     offset += 10
 
 d = dict()
 curr = 1
@@ -183,30 +194,53 @@ for y in range(len(g)):
             curr += 1
 
 gals = list(range(1, curr+1))
-
+const = 1000000 - 1
 def distance(c1, c2):
     x1, y1 = c1
     x2, y2 = c2
-    if x1 == x2:
-        return abs(y1-y2)
-    elif y1 == y2:
-        return abs(x1-x2)
-    else:
-        stepX, stepY = (x2-x1)//abs(x2-x1), (y2-y1)//abs(y2-y1)
-        ans = 0
-        while True:
+    if x2-x1 != 0:
+        stepX = (x2-x1)//abs(x2-x1)
+    if y2-y1 != 0:
+        stepY = (y2-y1)//abs(y2-y1)
+    
+    ans = 0
+    while True:
             if x1 == x2:
-                return ans + abs(y1-y2)
+                while True:
+                    if y1 == y2:
+                        return ans
+                    else:
+                        if y1 in row:
+                            ans += const
+
+                        ans += 1
+                        y1 += stepY
             elif y1 == y2:
-                return ans + abs(x1-x2)
+                while True:
+                    if x1 == x2:
+                        return ans
+                    else:
+                        if x1 in col:
+                            ans += const 
+                        
+                        ans += 1
+                        x1 += stepX
             else:
+                if x1 in col:
+                    ans += (const)
                 x1 += stepX
+                # if x1 in col:
+                #     ans += (const)
+                if y1 in row:
+                    ans += const 
                 y1 += stepY
+                # if y1 in row:
+                #     ans += const
                 ans += 2
                 
-                
-                
+               
 
+                
 ans = 0
 for n,i in enumerate(gals):
     for j in range(n+1, len(gals)):
