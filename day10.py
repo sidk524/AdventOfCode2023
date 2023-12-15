@@ -139,6 +139,17 @@ L7||.|.-JLJ|.F|-.FFJ..||.7J7-JJFL7|LJ-.LJ.L|L--J||.|.FL||F-J|FJF7LJL7-L.LF.F-J-|
 FFF7J|.|.LF|.7JJ--LJF-|LFJFJJ7F|LFL7J|FJ|.F|-|JF|L-L77FLJ|F-JL7|L7F7L7FJL|.F.J.||FF7LF|F7LL7FFJJ7L-7J|||7.F-|.J.F-J.|.LF-F-JL|L7|L.FLFJJ.FJ.
 7.LJL---7.LL--7J-JLLJ.|LLL-J-7--..JL-JLJ--FJ-|----LLL--JLLJ-LLLJLLJL-JJJ.L-.|JFLJJ.LJ..F.7--LL.JJ-LLJF-JL-JJF-JFJJ.F-7L--|J.LL.-JL-L.|-----L""".split("\n")
 
+# inp = """.F----7F7F7F7F-7....
+# .|F--7||||||||FJ....
+# .||.FJ||||||||L7....
+# FJL7L7LJLJ||LJ.L-7..
+# L--J.L7...LJS7F-7L7.
+# ....F-J..F7FJ|L7L7L7
+# ....L7.F7||L7|.L7L7|
+# .....|FJLJ|FJ|F7|.LJ
+# ....FJL-7.||.||||...
+# ....L---J.LJ.LJLJ...""".split("\n")
+
 # inp = """...........
 # .S-------7.
 # .|F-----7|.
@@ -160,17 +171,21 @@ opposite = {"n": "s", "s": "n", "e": "w", "w": "e"}
 offset = {"n": (-1, 0), "s": (1, 0), "e": (0, 1), "w": (0, -1)}
 path = [start]
 direction = "n"
+
 def checkValid(p, i, direction):
+    if inp[p[0]][p[1]] == "." or inp[i[0]][i[1]] == ".":
+        return (False, None)  
     dp = d[inp[p[0]][p[1]]]
     di = d[inp[i[0]][i[1]]]
+    
     if opposite[direction] in dp and offset[direction] == (p[0]-i[0], p[1]-i[1]):
         return (True, [i for i in dp if i != opposite[direction]][0])
     else:
         return (False, None)
+
 ans = 0
 prev = start
 while True:
-        print(path[-1])
         if path[-1] == start and len(path) > 1:
             
             break
@@ -179,12 +194,12 @@ while True:
         for i in range(-1, 2):
             if i == 0:
                 continue
-            if 0 <= y+i < len(inp[0]):
+            if 0 <= y+i < len(inp):
                 potential.append((y+i, x))
         for i in range(-1, 2):
             if i == 0:
                 continue
-            if 0 <= x+i < len(inp):
+            if 0 <= x+i < len(inp[0]):
                 potential.append((y, x+i))
         for i in potential:
             if inp[i[0]][i[1]] == ".":
@@ -199,17 +214,21 @@ while True:
                 ans += 1
                 break
 print(ans//2)
-# def checkInsideLoop(coordToCheck, loop):
-#     inter = 0
-#     for i in range(coordToCheck[1], len(inp[0])):
-#         if (coordToCheck[0], i) in loop:
-#             inter += 1 
-#     return inter%2
-# for y in inp:
-#     for x in y:
+def checkInsideLoop(coordToCheck, loop):
+    inter = 0
 
-#         if checkInsideLoop((y,x), path):
-#             ans += 1
+    for i in range(0, coordToCheck[1]):
+        if (coordToCheck[0], i) in loop:
+            inter += inp[coordToCheck[0]][i] in {"F", "7", "|"}
+    return inter%2 == 1
 
+    
+ans = 0
+for y in range(len(inp)):
+    for x in range(len(inp[y])):
+        if (y,x) in path:
+            continue
+        if checkInsideLoop((y,x), path):
+            ans += 1
 
-# print(ans)
+print(ans)
